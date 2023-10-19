@@ -30,7 +30,7 @@ const authConfig = {
 const teamsUserCredential = new TeamsUserCredential(authConfig);
 const accessToken = await teamsUserCredential.getToken(""); // Get SSO token
 const endpoint = "https://YOUR_API_ENDPOINT";
-const response = await axios.default.get(endpoint + "/api/" + functionName, {
+const response = await axios.default.get(endpoint + "/api/" + getFunctionName, {
   headers: {
     Authorization: `Bearer ${accessToken.token}`,
   },

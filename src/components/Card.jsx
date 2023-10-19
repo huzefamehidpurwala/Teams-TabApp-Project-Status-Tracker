@@ -1,18 +1,23 @@
 import "./css/Card.css";
 import React from "react";
-import { ConvertDate, propNames } from "./lib/utils";
+import { ConvertDate, propNames, toTitleCase } from "./lib/utils";
 import {
   Button,
   Dialog,
   DialogActions,
-  DialogBody,
+  // DialogBody,
   DialogContent,
   DialogSurface,
   DialogTitle,
   DialogTrigger,
   mergeClasses,
 } from "@fluentui/react-components";
-import { Open16Regular } from "@fluentui/react-icons";
+import {
+  Delete24Regular,
+  DragRegular,
+  Open16Regular,
+} from "@fluentui/react-icons";
+import PopUpForm from "./PopUpForm";
 // import DataPopup from "./DataPopup";
 
 const Card = (props) => {
@@ -34,34 +39,6 @@ const Card = (props) => {
       break;
   }
 
-  // console.log("huzefa", props);
-
-  const DataPopup = () => {
-    return (
-      <>
-        {/* <Dialog> */}
-        <DialogSurface>
-          <DialogBody>
-            <DialogTitle>Dialog title</DialogTitle>
-            <DialogContent>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              exercitationem cumque repellendus eaque est dolor eius expedita
-              nulla ullam? Tenetur reprehenderit aut voluptatum impedit
-              voluptates in natus iure cumque eaque?
-            </DialogContent>
-            <DialogActions>
-              <DialogTrigger disableButtonEnhancement>
-                <Button appearance="secondary">Close</Button>
-              </DialogTrigger>
-              <Button appearance="primary">Do Something</Button>
-            </DialogActions>
-          </DialogBody>
-        </DialogSurface>
-        {/* </Dialog> */}
-      </>
-    );
-  };
-
   const propHTML = (isDialog) => {
     let temp = [];
     for (const name of propNames) {
@@ -74,8 +51,11 @@ const Card = (props) => {
           name !== "Comment";
       if (checkCondition) {
         temp.push(
-          <div class="ag-courses-item_date-box">
-            <span class="ag-courses-item_date">{name}</span>:{" "}
+          <div
+            className="ag-courses-item_date-box"
+            key={`${name}-${props.reactKey}`}
+          >
+            <span className="ag-courses-item_date">{name}</span>:{" "}
             {checkDate?.toString() === "Invalid Date" || !isNaN(props[name])
               ? props[name]
               : props[name] && ConvertDate(props[name])}
@@ -86,54 +66,90 @@ const Card = (props) => {
     return temp;
   };
 
-  function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function (txt) {
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-  }
+  // onDragStart
+  // onDragOver
+  // onDrop
 
   return (
-    <div class="ag-format-container">
-      <div class="ag-courses_box">
-        <div class="ag-courses_item">
-          <div class="ag-courses-item_link" /* onClick={DataPopup} */>
+    <div className="ag-format-container" /* key={props.reactKey} */>
+      <div className="ag-courses_box">
+        <div className="ag-courses_item">
+          <div className="ag-courses-item_link" /* onClick={DataPopup} */>
             <div
-              class={mergeClasses("ag-courses-item_bg", `bg-for-${statusBg}`)}
+              className={mergeClasses(
+                "ag-courses-item_bg",
+                `bg-for-${statusBg}`
+              )}
             ></div>
-            <div class="ag-courses-item_title">
+            <div className="ag-courses-item_title">
               {toTitleCase(props.TaskTitle)}
             </div>
             {propHTML(false)}
-            <div className="details-btn">
-              <Dialog>
-                <DialogTrigger disableButtonEnhancement>
-                  <Button appearance="primary" icon={<Open16Regular />}>
-                    Details
-                  </Button>
-                </DialogTrigger>
-                <DialogSurface>
-                  <div
-                    class={mergeClasses(
-                      "ag-courses-item_bg",
-                      `bg-for-${statusBg}`
-                    )}
-                  ></div>
-                  <DialogTitle>
-                    <div class="ag-courses-item_title">
-                      {toTitleCase(props.TaskTitle)}
+            <div className="card-btn">
+              <div className="primary-card-btn">
+                <Dialog>
+                  <DialogTrigger disableButtonEnhancement>
+                    <div className="details-btn">
+                      <Button appearance="primary" icon={<Open16Regular />}>
+                        Details
+                      </Button>
                     </div>
-                  </DialogTitle>
-                  <DialogContent>{propHTML(true)}</DialogContent>
-                  <DialogActions>
-                    <DialogTrigger disableButtonEnhancement>
-                      <div className="details-btn">
-                        <Button appearance="secondary">Close</Button>
+                  </DialogTrigger>
+                  <DialogSurface>
+                    <div
+                      className={mergeClasses(
+                        "ag-courses-item_bg",
+                        `bg-for-${statusBg}`
+                      )}
+                      style={{ height: "170px", width: "170px" }}
+                    ></div>
+                    <DialogTitle>
+                      <div className="ag-courses-item_title">
+                        {toTitleCase(props.TaskTitle)}
                       </div>
-                    </DialogTrigger>
-                    {/* <Button appearance="primary">Do Something</Button> */}
-                  </DialogActions>
-                </DialogSurface>
-              </Dialog>
+                    </DialogTitle>
+                    <DialogContent>{propHTML(true)}</DialogContent>
+                    <DialogActions>
+                      <div className="card-btn">
+                        <DialogTrigger disableButtonEnhancement>
+                          <Button appearance="secondary">Close</Button>
+                        </DialogTrigger>
+                        <PopUpForm
+                          typeOfPopUp="Edit Task"
+                          handleSubmit={props.taskEdit}
+                          // taskId={props.id}
+                          {...props}
+                        />
+                      </div>
+                    </DialogActions>
+                  </DialogSurface>
+                </Dialog>
+                <div className="drag-btn">
+                  <Button
+                    className="cursor-drag-btn"
+                    appearance="primary"
+                    icon={<DragRegular />}
+                    // style={{ "cursor:hover": "grab !important" }}
+                    draggable={true}
+                    onDragStart={(e) => {
+                      // console.log("Dropped Drag started", props.id, e);
+                      e.dataTransfer.setData("taskId", props.id);
+                      e.dataTransfer.setData("taskStatus", props.Status);
+                    }}
+                  >
+                    Drag
+                  </Button>
+                </div>
+              </div>
+              <div className="delete-btn">
+                <Button
+                  appearance="secondary"
+                  icon={<Delete24Regular />}
+                  onClick={(e) => {
+                    props.taskDelete(props.id);
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>

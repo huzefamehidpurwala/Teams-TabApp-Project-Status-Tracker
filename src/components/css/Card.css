@@ -1,6 +1,7 @@
 .ag-format-container {
   width: 400px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  margin-top: 80px;
   line-height: 1.25;
 }
 
@@ -14,16 +15,16 @@
   -ms-flex-wrap: wrap;
   flex-wrap: wrap; */
   width: 400px;
-  padding-top: 50px;
+  /* padding-top: 50px; */
 }
 
 .ag-courses_item {
   -ms-flex-preferred-size: calc(33.33333% - 30px);
   flex-basis: calc(33.33333% - 30px);
-  margin: 0 15px 30px;
+  margin: 0 15px;
   overflow: hidden;
   border-radius: 28px;
-  border: 1px solid black;
+  border: 1px solid grey;
 }
 
 .ag-courses-item_link {
@@ -40,6 +41,8 @@
   /* cursor: pointer; */
 }
 
+/* Fill the Card with color on mouse-hover */
+.card-btn:focus .ag-courses-item_bg,
 .ag-courses-item_link:hover .ag-courses-item_bg {
   -webkit-transform: scale(10);
   -ms-transform: scale(10);
@@ -140,12 +143,41 @@
   }
 }
 
-.details-btn {
+.card-btn {
+  display: flex;
   position: relative;
   z-index: 2;
   margin-top: 20px;
+  column-gap: 8px;
+  justify-content: space-between;
 }
 
+/* .details-btn {
+  margin-right: 5px;
+}
+
+.drag-btn {
+  margin-left: 5px;
+} */
+
+.primary-card-btn {
+  display: flex;
+  column-gap: 8px;
+}
+
+.delete-btn {
+  justify-self: end;
+}
+
+.cursor-drag-btn:hover {
+  cursor: grab !important;
+}
+
+.cursor-drag-btn:focus {
+  cursor: grabbing !important;
+}
+
+/* this colors random cards to random colors but cannot apply in this situation */
 /* .ag-courses_item:nth-child(2n) .ag-courses-item_bg {
   background-color: #3ecd5e;
 }
