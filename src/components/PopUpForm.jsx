@@ -13,7 +13,7 @@ import {
   Option,
   Textarea,
 } from "@fluentui/react-components";
-import { Add32Filled } from "@fluentui/react-icons";
+import { Add32Filled, Edit20Regular } from "@fluentui/react-icons";
 import React, { useState } from "react";
 import { ConvertDate, propNames, statusValues } from "./lib/utils";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
@@ -61,7 +61,15 @@ const PopUpForm = (props) => {
             size="large"
             appearance="primary"
             className="add-task-btn"
-            icon={<Add32Filled />}
+            icon={
+              props.typeOfPopUp === "New Task" ? (
+                <Add32Filled />
+              ) : props.typeOfPopUp === "Edit Task" ? (
+                <Edit20Regular />
+              ) : (
+                <></>
+              )
+            }
           >
             {props.typeOfPopUp === "New Task"
               ? "Add New Task"
