@@ -129,7 +129,7 @@ const PopUpForm = (props) => {
                   <DatePicker
                     id={propNames[3]}
                     formatDate={ConvertDate}
-                    value={taskStartDate}
+                    value={taskStartDate === "" ? null : taskStartDate}
                     onSelectDate={(date) => {
                       const selectedDateVal = new Date(date);
                       setTaskStartDate(selectedDateVal);
@@ -145,7 +145,7 @@ const PopUpForm = (props) => {
                   <DatePicker
                     id={propNames[4]}
                     formatDate={ConvertDate}
-                    value={taskEndDate}
+                    value={taskEndDate === "" ? null : taskEndDate}
                     onSelectDate={(date) => {
                       const selectedDateVal = new Date(date);
                       setTaskEndDate(selectedDateVal);
@@ -163,7 +163,7 @@ const PopUpForm = (props) => {
                 id={propNames[5]}
                 aria-labelledby="statusDropDown"
                 placeholder="Select a status..."
-                value={taskStatusValue}
+                value={taskStatusValue === "" ? null : taskStatusValue}
                 onOptionSelect={(e, data) =>
                   setTaskStatusValue(data.optionValue)
                 }

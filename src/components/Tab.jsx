@@ -4,7 +4,6 @@ import "./css/Tab.css";
 import {
   Button,
   DialogSurface,
-  // Button,
   Text,
   mergeClasses,
 } from "@fluentui/react-components";
@@ -43,6 +42,9 @@ export default function Tab() {
   }; */
   const teamsUserCredential = useContext(TeamsFxContext).teamsUserCredential;
   const [pageLoading, setPageLoading] = useState(false);
+  const [alertUser, setAlertUser] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [deleteTaskId, setDeleteTaskId] = useState("");
 
   // GET data method
   const { loading, data, error, reload } = useData(async () => {
@@ -133,6 +135,20 @@ export default function Tab() {
   const handleAddTask = async (e) => {
     e.preventDefault();
 
+    for (const field of e.target) {
+      console.log("outside", field.id, "====", field.value);
+      if (reqPropNames.includes(field.id)) {
+        console.log("inside", field.id, "====", field.value);
+        if (!field.value) {
+          // alert the user
+          setAlertUser(true);
+          setAlertTitle("You missed some Important Fields to be filled!");
+          // console.error("any field empty");
+          return;
+        }
+      }
+    }
+
     setPageLoading(true);
     let dataForPost = {};
     for (const field of e.target) {
@@ -160,17 +176,23 @@ export default function Tab() {
     setPageLoading(false);
   };
 
-  const handleTaskDelete = async (taskId) => {
-    // console.log({ taskId });
-    setPageLoading(true);
-    const something = await deleteListAPI(teamsUserCredential, { taskId });
-    // console.log("success for jamali", something);
-    something === 200 ? reload() : console.error("failed update", something);
-    setPageLoading(false);
-  };
-
   const handleTaskEdit = async (e, taskId) => {
     e.preventDefault();
+
+    for (const field of e.target) {
+      console.log("outside", field.id, "====", field.value);
+      if (reqPropNames.includes(field.id)) {
+        console.log("inside", field.id, "====", field.value);
+        if (!field.value) {
+          // alert the user
+          setAlertUser(true);
+          setAlertTitle("You missed some Important Fields to be filled!");
+          // console.error("any field empty");
+          return;
+        }
+      }
+    }
+
     setPageLoading(true);
     let dataForPatch = {};
     for (const field of e.target) {
@@ -187,10 +209,6 @@ export default function Tab() {
       }
     }
 
-    for (const name of reqPropNames) {
-      if (reqPropNames.includes(name)) {
-      }
-    }
     // console.log("submit success", taskId, dataForPatch);
     const something = await patchListAPI(teamsUserCredential, {
       taskId,
@@ -198,6 +216,18 @@ export default function Tab() {
     });
     // console.log("success for jamali", something);
     something === 200 ? reload() : console.error("failed update", something);
+    setPageLoading(false);
+  };
+
+  const handleTaskDelete = async (taskId) => {
+    // console.log({ taskId });
+
+    setPageLoading(true);
+    const something = await deleteListAPI(teamsUserCredential, { taskId });
+    // console.log("success for jamali", something);
+    something === 200 ? reload() : console.error("failed update", something);
+    setDeleteTaskId("");
+    setAlertUser(false);
     setPageLoading(false);
   };
 
@@ -225,11 +255,31 @@ export default function Tab() {
         </DialogSurface>
       ) : (
         <>
-          {pageLoading && (
-            <SmallPopUp className="loading" msg="Updating Data..." />
-          )}
+          <SmallPopUp
+            className="loading"
+            msg={
+              loading
+                ? "Fetching Data..."
+                : pageLoading
+                ? "Updating Data..."
+                : ""
+            }
+            open={pageLoading || loading}
+            spinner={true}
+            modalType="alert"
+          />
 
-          {loading && <SmallPopUp className="loading" msg="Fetching Data..." />}
+          <SmallPopUp
+            // className="loading"
+            // msg="Fetching Data..."
+            open={alertUser}
+            spinner={false}
+            deleteTaskId={deleteTaskId}
+            onOpenChange={(e, data) => setAlertUser(data.open)}
+            title={alertTitle}
+            modalType="alert"
+            taskDelete={handleTaskDelete}
+          />
 
           <div className="heading">
             <Text size={900}>Projects Tracker</Text>
@@ -293,7 +343,11 @@ export default function Tab() {
                     <Card
                       {...row.fields}
                       reactKey={index}
-                      taskDelete={handleTaskDelete}
+                      taskDelete={(taskId) => {
+                        setAlertUser(true);
+                        setDeleteTaskId(taskId);
+                        setAlertTitle("Are you sure to delete the Task?");
+                      }}
                       taskEdit={handleTaskEdit}
                     />
                   </Modal>
