@@ -136,9 +136,9 @@ export default function Tab() {
     e.preventDefault();
 
     for (const field of e.target) {
-      console.log("outside", field.id, "====", field.value);
+      // console.log("outside", field.id, "====", field.value);
       if (reqPropNames.includes(field.id)) {
-        console.log("inside", field.id, "====", field.value);
+        // console.log("inside", field.id, "====", field.value);
         if (!field.value) {
           // alert the user
           setAlertUser(true);
@@ -180,9 +180,9 @@ export default function Tab() {
     e.preventDefault();
 
     for (const field of e.target) {
-      console.log("outside", field.id, "====", field.value);
+      // console.log("outside", field.id, "====", field.value);
       if (reqPropNames.includes(field.id)) {
-        console.log("inside", field.id, "====", field.value);
+        // console.log("inside", field.id, "====", field.value);
         if (!field.value) {
           // alert the user
           setAlertUser(true);
