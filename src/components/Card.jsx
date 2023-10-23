@@ -5,7 +5,6 @@ import {
   Button,
   Dialog,
   DialogActions,
-  // DialogBody,
   DialogContent,
   DialogSurface,
   DialogTitle,
@@ -18,21 +17,24 @@ import {
   Open16Regular,
 } from "@fluentui/react-icons";
 import PopUpForm from "./PopUpForm";
-// import DataPopup from "./DataPopup";
 
 const Card = (props) => {
   let statusBg = "";
+  let borderBg = "";
   switch (props.Status) {
     case "In Progress":
       statusBg = "in_progress";
+      borderBg = "in_progress";
       break;
 
     case "Not Started":
       statusBg = "not_started";
+      borderBg = "not_started";
       break;
 
     case "Completed":
       statusBg = "completed";
+      borderBg = "completed";
       break;
 
     default:
@@ -71,9 +73,14 @@ const Card = (props) => {
   // onDrop
 
   return (
-    <div className="ag-format-container" /* key={props.reactKey} */>
+    <div
+      className="ag-format-container"
+      onDragOver={(e) => e.stopPropagation()}
+    >
       <div className="ag-courses_box">
-        <div className="ag-courses_item">
+        <div
+          className={mergeClasses("ag-courses_item", `border-for-${borderBg}`)}
+        >
           <div className="ag-courses-item_link" /* onClick={DataPopup} */>
             <div
               className={mergeClasses(

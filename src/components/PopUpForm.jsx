@@ -23,6 +23,16 @@ const PopUpForm = (props) => {
     return date ? new Date(date) : "";
   };
 
+  // const todaysDate = () => {
+  //   return new Date();
+  // };
+
+  // const todaysDate = new Date();
+
+  // const maxDateAllowed = () => {
+  //   return new Date();
+  // };
+
   const [projectTitle, setProjectTitle] = useState(
     props[propNames[0]] ? props[propNames[0]] : ""
   );
@@ -142,6 +152,7 @@ const PopUpForm = (props) => {
                       const selectedDateVal = new Date(date);
                       setTaskStartDate(selectedDateVal);
                     }}
+                    // max={todaysDate}
                     showGoToToday={true}
                     isMonthPickerVisible={false}
                     required
@@ -158,6 +169,7 @@ const PopUpForm = (props) => {
                       const selectedDateVal = new Date(date);
                       setTaskEndDate(selectedDateVal);
                     }}
+                    // min={todaysDate}
                     showGoToToday={true}
                     isMonthPickerVisible={false}
                     placeholder="Select a date..."

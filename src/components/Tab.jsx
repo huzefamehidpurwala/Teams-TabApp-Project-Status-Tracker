@@ -14,21 +14,24 @@ import {
   propNames,
   queryListAPI,
   reqPropNames,
+  sendNotificationAPI,
+  statusValues,
 } from "./lib/utils";
 import { useData } from "@microsoft/teamsfx-react";
 import { createPortal } from "react-dom";
 import Card from "./Card";
 import PopUpForm from "./PopUpForm";
 import SmallPopUp from "./SmallPopUp";
+import config from "./lib/config";
 
 function Modal(props) {
-  if (props.location) {
+  if (statusValues.includes(props.location)) {
     return createPortal(
       props.children,
       document.getElementById(props.location)
     );
   } else {
-    return;
+    return props.children;
   }
 }
 
@@ -52,9 +55,10 @@ export default function Tab() {
       throw new Error("TeamsFx SDK is not initialized.");
     }
     if (needConsent) {
-      await teamsUserCredential.login(/* ["User.Read", ""] */);
+      await teamsUserCredential.login(["User.Read"]); // ["AllSites.Write", "AllSites.Manage", "AllSites.Read"]
       setNeedConsent(false);
     }
+    // console.log(data);
     try {
       const functionRes = await queryListAPI(teamsUserCredential);
       // console.log("Huzefa", functionRes, "huzefa");
@@ -134,6 +138,7 @@ export default function Tab() {
 
   const handleAddTask = async (e) => {
     e.preventDefault();
+    // console.log("starting add task");
 
     for (const field of e.target) {
       // console.log("outside", field.id, "====", field.value);
@@ -150,6 +155,7 @@ export default function Tab() {
     }
 
     setPageLoading(true);
+    // let taskTitle = "";
     let dataForPost = {};
     for (const field of e.target) {
       // console.log(field.id, field.value);
@@ -164,16 +170,14 @@ export default function Tab() {
         }
       }
     }
-
-    for (const name of reqPropNames) {
-      if (reqPropNames.includes(name)) {
-      }
-    }
     // console.log("submit success", dataForPost);
+    // console.log("*************sending to list add task");
     const something = await postListAPI(teamsUserCredential, dataForPost);
     // console.log("success for jamali", something);
     something === 200 ? reload() : console.error("failed update", something);
     setPageLoading(false);
+
+    callSendNotification(dataForPost[propNames[1]]);
   };
 
   const handleTaskEdit = async (e, taskId) => {
@@ -229,6 +233,37 @@ export default function Tab() {
     setDeleteTaskId("");
     setAlertUser(false);
     setPageLoading(false);
+  };
+
+  const callSendNotification = async (taskTitle = "") => {
+    // console.log("########sending notify add task");
+    const something1 = await sendNotificationAPI(teamsUserCredential, {
+      userNitishId: "Nitish.K@ygr11.onmicrosoft.com",
+      notifyBody: {
+        topic: {
+          source: "text",
+          value: "New Task Created",
+          webUrl: `https://teams.microsoft.com/l/entity/${config.teamsAppId}/tab`,
+        },
+        activityType: "taskCreated",
+        previewText: {
+          content: "New Task Created",
+        },
+        templateParameters: [
+          {
+            name: "taskId",
+            value: (data.graphClientMessage.value.length + 1).toString(),
+          },
+          {
+            name: "taskName",
+            value: taskTitle,
+          },
+        ],
+      },
+    });
+    something1 === 200
+      ? console.log("notify success")
+      : console.error("failed update", something1);
   };
 
   return (
@@ -291,6 +326,10 @@ export default function Tab() {
             btnClass="add-task-btn"
           />
 
+          {/* <Button onClick={(e) => callSendNotification()}>
+            call notification
+          </Button> */}
+
           <div className="flex-container">
             <div
               className="flex-item"
@@ -335,26 +374,28 @@ export default function Tab() {
             </div>
           </div>
 
-          {data && (
-            <>
-              {data.graphClientMessage.value.map((row, index) => {
-                return (
-                  <Modal location={row.fields.Status}>
-                    <Card
-                      {...row.fields}
-                      reactKey={index}
-                      taskDelete={(taskId) => {
-                        setAlertUser(true);
-                        setDeleteTaskId(taskId);
-                        setAlertTitle("Are you sure to delete the Task?");
-                      }}
-                      taskEdit={handleTaskEdit}
-                    />
-                  </Modal>
-                );
-              })}
-            </>
-          )}
+          <div className="no-status-cards">
+            {data && (
+              <>
+                {data.graphClientMessage.value.map((row, index) => {
+                  return (
+                    <Modal location={row.fields.Status}>
+                      <Card
+                        {...row.fields}
+                        reactKey={index}
+                        taskDelete={(taskId) => {
+                          setAlertUser(true);
+                          setDeleteTaskId(taskId);
+                          setAlertTitle("Are you sure to delete the Task?");
+                        }}
+                        taskEdit={handleTaskEdit}
+                      />
+                    </Modal>
+                  );
+                })}
+              </>
+            )}
+          </div>
         </>
       )}
     </div>

@@ -27,6 +27,18 @@
   border: 1px solid grey;
 }
 
+.border-for-in_progress {
+  border-color: #f9b234;
+}
+
+.border-for-not_started {
+  border-color: #e44002;
+}
+
+.border-for-completed {
+  border-color: #3ecd5e;
+}
+
 .ag-courses-item_link {
   display: block;
   padding: 30px 20px;
@@ -82,7 +94,7 @@
 .ag-courses-item_bg {
   height: 128px;
   width: 128px;
-  /* background-color: #f9b234; */
+  background-color: grey;
   z-index: 1;
   position: absolute;
   top: -75px;

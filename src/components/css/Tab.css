@@ -77,7 +77,12 @@
   /* border: 3px dotted black; */
   padding: 1rem 0;
   margin: 0 1rem;
-  min-height: 70vh;
+  min-height: 60vh;
+}
+
+.no-status-cards {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .add-task-form {
