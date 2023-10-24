@@ -326,10 +326,6 @@ export default function Tab() {
             btnClass="add-task-btn"
           />
 
-          {/* <Button onClick={(e) => callSendNotification()}>
-            call notification
-          </Button> */}
-
           <div className="flex-container">
             <div
               className="flex-item"
