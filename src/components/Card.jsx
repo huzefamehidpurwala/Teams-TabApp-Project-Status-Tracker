@@ -56,6 +56,10 @@ const Card = (props) => {
           <div
             className="ag-courses-item_date-box"
             key={`${name}-${props.reactKey}`}
+            style={{
+              textOverflow: isDialog ? "" : "ellipsis",
+              whiteSpace: isDialog ? "" : "nowrap",
+            }}
           >
             <span className="ag-courses-item_date">{name}</span>:{" "}
             {checkDate?.toString() === "Invalid Date" || !isNaN(props[name])

@@ -9,7 +9,7 @@
 }
 
 .loading {
-  z-index: 300;
+  /* z-index: 300; */
   /* min-height: 100vh; */
   display: flex;
   /* flex-direction: column; */
@@ -109,9 +109,29 @@
   justify-content: flex-end;
 }
 
-.add-task-btn {
-  /* width: 55%;
-  font-size: 180% !important; */
+/* .add-task-btn {
+  width: 55%;
+  font-size: 180% !important;
+} */
+
+.delete-screen {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  min-height: 100vh;
+  opacity: 0.4;
+  background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+}
+
+.delete-screen > .delete-icon {
+  width: 60%;
+  height: 60vh;
+  z-index: 0;
 }
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
