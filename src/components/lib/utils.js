@@ -176,6 +176,7 @@ export async function queryListAPI(teamsUserCredential) {
     );
     const response = await apiClient.get(getFunctionName);
     // console.log(response, "Huzefa");
+    config.taskData = response.data.graphClientMessage;
     return response.data;
   } catch (err) {
     let funcErrorMsg = "";
@@ -229,9 +230,16 @@ export function ConvertDate(str) {
 }
 
 export function toTitleCase(str) {
-  return str?.replace(/\w\S*/g, function (txt) {
+  // Convert underscores, hyphens, and camelCase to spaces
+  str = str
+    .replace(/_/g, " ")
+    .replace(/-/g, " ")
+    .replace(/([a-z])([A-Z])/g, "$1 $2");
+
+  // Add a space before a capital letter if it's preceded by a lowercase letter
+  str = str.replace(/([a-z])([A-Z])/g, "$1 $2");
+
+  return str.replace(/\w\S*/g, function (txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
-
-// module.exports = queryListAPI;
