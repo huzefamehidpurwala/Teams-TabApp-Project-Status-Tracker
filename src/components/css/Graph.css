@@ -1,0 +1,27 @@
+/* @import url("https://code.highcharts.com/css/themes/dark-unica.css"); */
+/* @import url("https://code.highcharts.com/css/themes/sand-signika.css"); */
+/* @import url("https://code.highcharts.com/css/themes/grid-light.css"); */
+
+.not-started {
+  background-color: #e44002;
+  width: 300px;
+  text-align: center;
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+.in-progress {
+  background-color: #f9b234;
+  width: 300px;
+  text-align: center;
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+.completed {
+  background-color: #3ecd5e;
+  width: 300px;
+  text-align: center;
+  border-radius: 28px;
+  overflow: hidden;
+}

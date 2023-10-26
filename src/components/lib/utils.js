@@ -1,5 +1,6 @@
 import { BearerTokenAuthProvider, createApiClient } from "@microsoft/teamsfx";
 import config from "./config";
+import * as msTeams from "@microsoft/teams-js";
 
 const getFunctionName = config.getApiName || "getListItems";
 const patchFunctionName = config.patchApiName || "patchListItems";
@@ -260,3 +261,10 @@ export function compareObjects(object1, object2) {
 
   return true;
 }
+
+export const redirectUsingDeeplink = (pathName) => {
+  // var encodedContext = `{"subEntityId":  ${data}}`;
+
+  const webUrl = `https://teams.microsoft.com/l/entity/${config.teamsAppId}${pathName}`;
+  msTeams.executeDeepLink(webUrl);
+};

@@ -8,6 +8,7 @@ const config = {
   deleteApiName: process.env.REACT_APP_DELETE_FUNC_NAME,
   postApiName: process.env.REACT_APP_POST_FUNC_NAME,
   notifyApiName: process.env.REACT_APP_NOTIFY_FUNC_NAME,
+  taskData: null,
 };
 
 export default config;

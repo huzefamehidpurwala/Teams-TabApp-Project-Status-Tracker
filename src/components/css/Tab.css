@@ -101,18 +101,13 @@
   flex-direction: column;
 }
 
-.add-task-btn-flex {
-  width: 55%;
+.header-btn-flex {
+  width: 100%;
   /* font-size: 180% !important; */
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-evenly;
 }
-
-/* .add-task-btn {
-  width: 55%;
-  font-size: 180% !important;
-} */
 
 .delete-screen {
   position: fixed;

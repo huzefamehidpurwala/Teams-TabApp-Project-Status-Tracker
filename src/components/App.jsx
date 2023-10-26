@@ -19,6 +19,8 @@ import TermsOfUse from "./TermsOfUse";
 import Tab from "./Tab";
 import { TeamsFxContext } from "./Context";
 import config from "./lib/config";
+import Graph from "./AnalyticsBarChart";
+import PieChart from "./PieChart";
 
 /**
  * The main app which handles the initialization and routing
@@ -55,6 +57,8 @@ export default function App() {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/termsofuse" element={<TermsOfUse />} />
               <Route path="/tab" element={<Tab />} />
+              <Route path="/graph" element={<Graph />} />
+              <Route path="/piechart" element={<PieChart />} />
               <Route path="*" element={<Navigate to={"/tab"} />}></Route>
             </Routes>
           )}

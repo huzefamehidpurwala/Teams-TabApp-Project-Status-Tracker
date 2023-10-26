@@ -5,6 +5,7 @@ import {
   Button,
   Dialog,
   DialogActions,
+  DialogBody,
   DialogContent,
   DialogSurface,
   DialogTitle,
@@ -59,11 +60,15 @@ const Card = (props) => {
             style={{
               textOverflow: isDialog ? "" : "ellipsis",
               whiteSpace: isDialog ? "" : "nowrap",
+              overflow: isDialog ? "" : "hidden",
+              marginTop: isDialog ? "15px" : "0",
             }}
           >
-            <span className="ag-courses-item_date">{name}</span>:{" "}
+            <span className="ag-courses-item_date">{toTitleCase(name)}</span>:{" "}
             {checkDate?.toString() === "Invalid Date" || !isNaN(props[name])
-              ? props[name]
+              ? name.toLowerCase().includes("title")
+                ? toTitleCase(props[name])
+                : props[name]
               : props[name] && ConvertDate(props[name])}
           </div>
         );
@@ -107,32 +112,34 @@ const Card = (props) => {
                     </div>
                   </DialogTrigger>
                   <DialogSurface>
-                    <div
-                      className={mergeClasses(
-                        "ag-courses-item_bg",
-                        `bg-for-${statusBg}`
-                      )}
-                      style={{ height: "170px", width: "170px" }}
-                    ></div>
-                    <DialogTitle>
-                      <div className="ag-courses-item_title">
-                        {toTitleCase(props.TaskTitle)}
-                      </div>
-                    </DialogTitle>
-                    <DialogContent>{propHTML(true)}</DialogContent>
-                    <DialogActions>
-                      <div className="card-btn">
-                        <DialogTrigger disableButtonEnhancement>
-                          <Button appearance="secondary">Close</Button>
-                        </DialogTrigger>
-                        <PopUpForm
-                          typeOfPopUp="Edit Task"
-                          handleSubmit={props.taskEdit}
-                          // taskId={props.id}
-                          {...props}
-                        />
-                      </div>
-                    </DialogActions>
+                    <DialogBody>
+                      <div
+                        className={mergeClasses(
+                          "ag-courses-item_bg",
+                          `bg-for-${statusBg}`
+                        )}
+                        style={{ height: "170px", width: "170px" }}
+                      ></div>
+                      <DialogTitle>
+                        <div className="ag-courses-item_title">
+                          {toTitleCase(props.TaskTitle)}
+                        </div>
+                      </DialogTitle>
+                      <DialogContent>{propHTML(true)}</DialogContent>
+                      <DialogActions>
+                        <div className="card-btn">
+                          <DialogTrigger disableButtonEnhancement>
+                            <Button appearance="secondary">Close</Button>
+                          </DialogTrigger>
+                          <PopUpForm
+                            typeOfPopUp="Edit Task"
+                            handleSubmit={props.taskEdit}
+                            // taskId={props.id}
+                            {...props}
+                          />
+                        </div>
+                      </DialogActions>
+                    </DialogBody>
                   </DialogSurface>
                 </Dialog>
                 <div className="drag-btn">

@@ -29,9 +29,16 @@
   "staticTabs": [
     {
       "entityId": "index",
-      "name": "Personal Tab",
+      "name": "Task List View",
       "contentUrl": "${{TAB_ENDPOINT}}/index.html#/tab",
       "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/tab",
+      "scopes": ["personal"]
+    },
+    {
+      "entityId": "analytics",
+      "name": "Analytics",
+      "contentUrl": "${{TAB_ENDPOINT}}/index.html#/graph",
+      "websiteUrl": "${{TAB_ENDPOINT}}/index.html#/graph",
       "scopes": ["personal"]
     }
   ],

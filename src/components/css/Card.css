@@ -79,7 +79,6 @@
   z-index: 2;
   position: relative;
   line-height: inherit;
-  overflow: hidden;
 }
 
 .ag-courses-item_date {

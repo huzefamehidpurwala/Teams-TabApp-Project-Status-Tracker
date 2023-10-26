@@ -13,7 +13,7 @@ import {
   Option,
   Textarea,
 } from "@fluentui/react-components";
-import { Add32Filled, Edit20Regular } from "@fluentui/react-icons";
+import { Add20Filled, Edit20Regular } from "@fluentui/react-icons";
 import React, { useState } from "react";
 import { ConvertDate, propNames, statusValues } from "./lib/utils";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
@@ -59,26 +59,17 @@ const PopUpForm = (props) => {
     <Dialog modalType="alert">
       <DialogTrigger disableButtonEnhancement>
         <div
-          className={
-            props.typeOfPopUp === "New Task"
-              ? "add-task-btn-flex"
-              : props.typeOfPopUp === "Edit Task"
-              ? ""
-              : ""
-          }
+        // className={""} // props.typeOfPopUp === "New Task"? "add-task-btn-flex": props.typeOfPopUp === "Edit Task"? "": ""
         >
           <Button
             size="large"
             appearance="primary"
-            className="add-task-btn"
             icon={
               props.typeOfPopUp === "New Task" ? (
-                <Add32Filled />
+                <Add20Filled />
               ) : props.typeOfPopUp === "Edit Task" ? (
                 <Edit20Regular />
-              ) : (
-                <></>
-              )
+              ) : null
             }
           >
             {props.typeOfPopUp === "New Task"
@@ -189,7 +180,7 @@ const PopUpForm = (props) => {
                 }
               >
                 {statusValues.map((value, index) => (
-                  <Option key={value} value={value}>
+                  <Option key={value} value={value} text={value}>
                     <span
                       className={
                         index === 0

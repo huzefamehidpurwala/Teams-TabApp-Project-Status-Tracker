@@ -3,16 +3,22 @@ import { TeamsFxContext } from "./Context";
 import "./css/Tab.css";
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogBody,
+  DialogContent,
   DialogSurface,
+  DialogTitle,
+  DialogTrigger,
   Text,
   mergeClasses,
 } from "@fluentui/react-components";
 import {
-  deleteListAPI,
   patchListAPI,
   postListAPI,
   propNames,
   queryListAPI,
+  redirectUsingDeeplink,
   reqPropNames,
   sendNotificationAPI,
   statusValues,
@@ -23,6 +29,7 @@ import Card from "./Card";
 import PopUpForm from "./PopUpForm";
 import SmallPopUp from "./SmallPopUp";
 import config from "./lib/config";
+import Graph from "./BarChart";
 
 function Modal(props) {
   if (statusValues.includes(props.location)) {
@@ -37,13 +44,8 @@ function Modal(props) {
 
 export default function Tab() {
   const { themeString } = useContext(TeamsFxContext);
-  const [needConsent, setNeedConsent] = useState(false);
-  /* const { codePath } = {
-    codePath: `api/${getFunctionName}/index.js`,
-    // docsUrl: "https://aka.ms/teamsfx-azure-functions",
-    ...props,
-  }; */
   const teamsUserCredential = useContext(TeamsFxContext).teamsUserCredential;
+  const [needConsent, setNeedConsent] = useState(false);
   const [pageLoading, setPageLoading] = useState(false);
   const [alertUser, setAlertUser] = useState(false);
   const [alertTitle, setAlertTitle] = useState("");
@@ -70,7 +72,7 @@ export default function Tab() {
       }
     }
   });
-  // console.log(getData);
+  // console.log(data);
 
   const changeInitialCss = (e) => {
     e.target.style.opacity = "0.4";
@@ -226,8 +228,20 @@ export default function Tab() {
   const handleTaskDelete = async (taskId) => {
     // console.log({ taskId });
 
+    // setPageLoading(true);
+    // const something = await deleteListAPI(teamsUserCredential, { taskId });
+    // // console.log("success for jamali", something);
+    // something === 200 ? reload() : console.error("failed update", something);
+    // setDeleteTaskId("");
+    // setAlertUser(false);
+    // setPageLoading(false);
+
+    // not actual delete logic
     setPageLoading(true);
-    const something = await deleteListAPI(teamsUserCredential, { taskId });
+    const something = await patchListAPI(teamsUserCredential, {
+      taskId,
+      taskStatus: { Status: null },
+    });
     // console.log("success for jamali", something);
     something === 200 ? reload() : console.error("failed update", something);
     setDeleteTaskId("");
@@ -243,7 +257,7 @@ export default function Tab() {
         topic: {
           source: "text",
           value: "New Task Created",
-          webUrl: `https://teams.microsoft.com/l/entity/${config.teamsAppId}/tab`,
+          webUrl: `https://teams.microsoft.com/l/entity/${config.teamsAppId}/index`,
         },
         activityType: "taskCreated",
         previewText: {
@@ -256,7 +270,7 @@ export default function Tab() {
           },
           {
             name: "taskName",
-            value: taskTitle,
+            value: taskTitle.toString(),
           },
         ],
       },
@@ -320,11 +334,41 @@ export default function Tab() {
             <Text size={900}>Projects Tracker</Text>
           </div>
 
-          <PopUpForm
-            typeOfPopUp="New Task"
-            handleSubmit={handleAddTask}
-            btnClass="add-task-btn"
-          />
+          <div className="header-btn-flex">
+            <div>
+              <Button
+                size="large"
+                onClick={(e) => redirectUsingDeeplink("/analytics")}
+              >
+                Goto Analytics
+              </Button>
+            </div>
+            <div>
+              {config.taskData && (
+                <Dialog>
+                  <DialogTrigger disableButtonEnhancement>
+                    <Button size="large">Show Graph in Dialog</Button>
+                  </DialogTrigger>
+                  <DialogSurface>
+                    <DialogBody>
+                      <DialogTitle>Graph</DialogTitle>
+                      <DialogContent>
+                        <Graph isPopUp={true} />
+                      </DialogContent>
+                      <DialogActions>
+                        <DialogTrigger disableButtonEnhancement>
+                          <Button>Close</Button>
+                        </DialogTrigger>
+                      </DialogActions>
+                    </DialogBody>
+                  </DialogSurface>
+                </Dialog>
+              )}
+            </div>
+            <div>
+              <PopUpForm typeOfPopUp="New Task" handleSubmit={handleAddTask} />
+            </div>
+          </div>
 
           <div className="flex-container">
             <div
@@ -394,6 +438,7 @@ export default function Tab() {
           </div>
         </>
       )}
+      {/* <DeleteScreen className="delete-screen" /> */}
     </div>
   );
 }
