@@ -1,52 +1,39 @@
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
-import { Button, DialogSurface, Text } from "@fluentui/react-components";
-import "./css/AnalyticsBarChart.css";
-import {
-  queryListAPI,
-  redirectUsingDeeplink,
-  statusValues,
-  toTitleCase,
-} from "./lib/utils";
-import { useContext, useState } from "react";
-import { TeamsFxContext } from "./Context";
-import { useData } from "@microsoft/teamsfx-react";
-import SmallPopUp from "./SmallPopUp";
+import { Button } from "@fluentui/react-components";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft24Filled } from "@fluentui/react-icons";
+import config from "../lib/config";
+import { statusValues, toTitleCase } from "../lib/utils";
+// import "./css/Graph.css";
 import exporting from "highcharts/modules/exporting";
-import { NavLink } from "react-router-dom";
 exporting(Highcharts);
 
-const Graph = () => {
-  const { themeString } = useContext(TeamsFxContext);
-  const teamsUserCredential = useContext(TeamsFxContext).teamsUserCredential;
-  const [needConsent, setNeedConsent] = useState(false);
+const Graph = (props) => {
+  const navigate = useNavigate();
 
-  // GET data method
-  const { loading, data, error, reload } = useData(async () => {
-    if (!teamsUserCredential) {
-      throw new Error("TeamsFx SDK is not initialized.");
-    }
-    if (needConsent) {
-      await teamsUserCredential.login(["User.Read"]); // ["AllSites.Write", "AllSites.Manage", "AllSites.Read"]
-      setNeedConsent(false);
-    }
-    // console.log(data);
-    try {
-      const functionRes = await queryListAPI(teamsUserCredential);
-      // console.log("Huzefa", functionRes, "huzefa");
-      // setNeedConsent(false);
-      return functionRes;
-    } catch (error) {
-      if (error.message.includes("The application may not be authorized.")) {
-        setNeedConsent(true);
-      }
-    }
-  });
+  // ChatGPT
+  // const getProjectTitles = () => {
+  //   const projectTitlesSet = new Set();
+
+  //   config.taskData?.value?.forEach((row) => {
+  //     const title = row.fields["Title"];
+  //     projectTitlesSet.add(title);
+  //   });
+
+  //   // Convert the Set to an array if needed
+  //   const projectTitlesArray = Array.from(projectTitlesSet);
+
+  //   // If you want to maintain the original order, you can use an array to deduplicate
+  //   // const projectTitlesArray = [...projectTitlesSet];
+
+  //   return projectTitlesArray;
+  // };
 
   const getProjectTitles = () => {
     let projectTitles = {};
-    data?.graphClientMessage &&
-      data?.graphClientMessage.value?.forEach((row) => {
+    config.taskData &&
+      config.taskData.value?.forEach((row) => {
         if (!(row.fields["Title"] in projectTitles)) {
           // projectTitles.push(row.fields["Title"]);
           projectTitles[row.fields["Title"]] = "";
@@ -75,13 +62,10 @@ const Graph = () => {
       name,
       data: Array(projectTitles.length).fill(0),
     }));
-    // console.log(series);
+    // console.log("Helloods", series);
 
-    data?.graphClientMessage &&
-      data?.graphClientMessage.value?.forEach((row) => {
-        // let inProgess = 0;
-        // let notStarted = 0;
-        // let completed = 0;
+    config.taskData &&
+      config.taskData.value?.forEach((row) => {
         switch (row.fields["Status"]) {
           case statusValues[0]:
             series[0].data[projectTitles.indexOf(row.fields["Title"])]++;
@@ -119,16 +103,13 @@ const Graph = () => {
     //   text: '<div style="color: red">Huzefa</div>',
     //   align: "left",
     // },
-    navigation: {
-      buttonOptions: {
-        enabled: true,
-      },
-    },
+    // navigation: {
+    //   buttonOptions: {
+    //     enabled: true,
+    //   },
+    // },
     exporting: {
       enabled: true,
-    },
-    accessibility: {
-      enabled: false, // to supress the console warning
     },
     xAxis: {
       categories: updateProjectTitles(getProjectTitles()), // ["Africa", "America", "Asia", "Europe", "Oceania"], // ! Project Title here
@@ -153,6 +134,9 @@ const Graph = () => {
     // the popup shown on mouse-hover
     tooltip: {
       valueSuffix: " tasks",
+    },
+    accessibility: {
+      enabled: false, // to supress the console warning
     },
     plotOptions: {
       bar: {
@@ -184,53 +168,19 @@ const Graph = () => {
   };
 
   return (
-    <div
-      className={
-        themeString === "default"
-          ? "light"
-          : themeString === "dark"
-          ? "dark"
-          : "contrast"
-      }
-    >
-      {error || needConsent ? (
-        <DialogSurface>
-          <div className="error">
-            <Text size={800}>Fetching Data Failed</Text>
-            <br />
-            <br />
-            <Button appearance="primary" disabled={loading} onClick={reload}>
-              Authorize and call Azure Function
-            </Button>
-          </div>
-        </DialogSurface>
+    <div id="Graph" /*  style={{ height: "100vh", width: "100%" }} */>
+      {props.isPopUp ? (
+        <></>
       ) : (
-        <>
-          <SmallPopUp
-            className="loading"
-            msg={"Fetching Data..."}
-            open={loading}
-            spinner={true}
-            modalType="alert"
-          />
-
-          <Button onClick={(e) => redirectUsingDeeplink("/index")}>
-            Task List
-          </Button>
-          <NavLink to={"/piechart"} className="nav-link">
-            <Text size={400}>PieChart</Text>
-          </NavLink>
-          {/* <Button onClick={(e) => window.location.reload()}>Refresh</Button> */}
-          {/* <Button onClick={(e) => console.log(getValForSeries())}>Console</Button> */}
-          {data && (
-            <HighchartsReact
-              containerProps={{ style: { height: "96%" } }}
-              highcharts={Highcharts}
-              options={options}
-            />
-          )}
-        </>
+        <Button onClick={(e) => navigate(-1)} icon={<ArrowLeft24Filled />} />
       )}
+      {/* <Button onClick={(e) => window.location.reload()}>Refresh</Button> */}
+      {/* <Button onClick={(e) => console.log("kyu bhia", getValForSeries())}>Console</Button> */}
+      <HighchartsReact
+        containerProps={props.isPopUp ? {} : { style: { height: "96%" } }}
+        highcharts={Highcharts}
+        options={options}
+      />
     </div>
   );
 };

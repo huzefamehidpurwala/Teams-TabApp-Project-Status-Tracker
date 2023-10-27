@@ -29,7 +29,7 @@ import Card from "./Card";
 import PopUpForm from "./PopUpForm";
 import SmallPopUp from "./SmallPopUp";
 import config from "./lib/config";
-import Graph from "./BarChart";
+import Graph from "./analytics/BarChart";
 
 function Modal(props) {
   if (statusValues.includes(props.location)) {

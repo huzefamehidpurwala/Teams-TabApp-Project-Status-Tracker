@@ -3,10 +3,10 @@ import HighchartsReact from "highcharts-react-official";
 import { useNavigate } from "react-router-dom";
 import Highcharts from "highcharts";
 import { ArrowLeft24Filled } from "@fluentui/react-icons";
-import config from "./lib/config";
-import { statusValues, toTitleCase } from "./lib/utils";
+import config from "../lib/config";
+import { statusValues, toTitleCase } from "../lib/utils";
 import { useState } from "react";
-import "./css/Graph.css";
+import "./../css/Graph.css";
 import exporting from "highcharts/modules/exporting";
 exporting(Highcharts);
 
@@ -202,13 +202,7 @@ const PieChart = (props) => {
         <Button onClick={(e) => navigate(-1)} icon={<ArrowLeft24Filled />} />
       )}
       {/* <Button onClick={(e) => window.location.reload()}>Refresh</Button> */}
-      <Button
-        onClick={(e) =>
-          console.log("kyu bhia", getValForSeriesData("Not Started"))
-        }
-      >
-        Console
-      </Button>
+      {/* <Button onClick={(e) => console.log("kyu bhia", getValForSeriesData("Not Started"))}>Console</Button> */}
       <Dropdown
         // id={propNames[5]}
         aria-labelledby="statusDropDown"

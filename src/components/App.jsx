@@ -14,13 +14,13 @@ import {
   Routes,
 } from "react-router-dom";
 import { useTeamsUserCredential } from "@microsoft/teamsfx-react";
-import Privacy from "./Privacy";
-import TermsOfUse from "./TermsOfUse";
+import Privacy from "./extras/Privacy";
+import TermsOfUse from "./extras/TermsOfUse";
 import Tab from "./Tab";
 import { TeamsFxContext } from "./Context";
 import config from "./lib/config";
-import Graph from "./AnalyticsBarChart";
-import PieChart from "./PieChart";
+import Graph from "./analytics/AnalyticsBarChart";
+import PieChart from "./analytics/PieChart";
 
 /**
  * The main app which handles the initialization and routing
